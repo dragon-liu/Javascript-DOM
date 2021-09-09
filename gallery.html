@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <title>NSFW Gallery</title>
+        <link rel="stylesheet" href="styles/layout.css" media="screen" />
+    </head>
+    <body>
+        <h1>我喜欢的涩图</h1>
+        <ul>
+            <li>
+                <a href="images/1.jpg" title="牛若丸" onclick="showPic(this);return false;">牛若丸</a>
+            </li>
+            <li>
+                <a href="images/2.jpg" title="德克萨斯" onclick="showPic(this);return false;">德克萨斯</a>
+            </li>
+            <li>
+                <a href="images/3.jpg" title="凛冬" onclick="showPic(this);return false;">凛冬</a>
+            </li>
+            <li>
+                <a href="images/4.jpg" title="星熊" onclick="showPic(this);return false;">星熊</a>
+            </li>
+        </ul>
+        <img id="placeholder" src="images/placeholder.gif" alt="my image gallery" />
+
+        <script type="text/javascript" src="scripts/showPic.js"></script>
+        <p id="description" >选择一张图片</p>
+    </body>
+</html>
