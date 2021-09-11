@@ -296,6 +296,88 @@ function displayAbbreviations() {
   articles[0].appendChild(dlist);
 }
 
+//Contact
+
+function focusLabels(){
+  if(!document.getElementsByTagName) return false;
+  var labels = document.getElementsByTagName("label");
+  for(var i=0; i<labels.length; i++){
+    if(!labels[i].getAttribute("for")) continue;
+    labels[i].onclick = function(){
+      var id = this.getAttribute("for");
+      if(!document.getElementById(id)) return false;
+      var element = document.getElementById(id);
+      element.focus();
+    }
+  }
+}
+
+function resetFields(whichform){
+  //检查浏览器是否支持placeholder属性，不支持则继续
+  if(Modernizr.input.placeholder) return;
+  for(var i=0; i<whichform.elements.length; i++){
+    var element = whichform.elements[i];
+    if(element.type == "submit") continue;
+    var check = element.placeholder || element.getAttribute("placeholder");
+    if(!check) continue;
+    element.onfocus = function(){
+      var text = this.placeholder || this.getAttribute("placeholder");
+      if(this.value == text){
+        this.className = "";
+        this.value = "";
+      }
+    }
+    element.onblur = function(){
+      if(this.value == ""){
+        this.className = "placeholder";
+        this.value = this.placeholder || this.getAttribute("placeholder");
+      } 
+    }
+    //定义完失焦事件后立即调用它，以便设置默认占位符
+    element.onblur();
+  }
+}
+
+function prepareForms(){
+  for(var i=0;i<document.forms.length;i++){
+    var thisform = document.forms[i];
+    resetFields(thisform);
+    thisform.onsubmit = function(){
+      return validateForm(this);
+    }
+  }
+}
+
+function isFilled(field){
+  if(field.value.replace(" ","").length == 0) return false;
+  var text = field.placeholder || field.getAttribute("placeholder");
+  return (field.value != text);
+}
+
+function isEmail(field){
+  return (field.value.indexOf("@") != -1 && field.value.indexOf(".") != -1);
+}
+
+function validateForm(whichform){
+  for(var i=0; i<whichform.elements.length; i++){
+    var element = whichform.elements[i];
+    //TODO:在Firefox中这两条都有错，跟required这个属性有关，但Chrome中这两条均可，不知道什么原因
+    if(element.required == true || element.getAttribute("required") == 'required'){
+      if(!isFilled(element)){
+        alert("Please fill in the "+element.name+" field.");
+        return false;
+      }
+    }
+    if(element.type == "email"){
+      if(!isEmail(element)){
+        alert("The "+element.name+" field must be a valid email address.");
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 // Load events
 addLoadEvent(highlightPage);
 addLoadEvent(prepareSlideshow);
@@ -305,4 +387,6 @@ addLoadEvent(preparePlaceholder);
 addLoadEvent(stripeTables);
 addLoadEvent(highlightRows);
 addLoadEvent(displayAbbreviations);
+addLoadEvent(focusLabels);
+addLoadEvent(prepareForms);
 
